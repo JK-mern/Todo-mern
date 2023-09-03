@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from 'axios'
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const api = "http://localhost:3001"
 
@@ -8,6 +10,12 @@ function App() {
   const [todos, setTodos] = useState([])
   const [popupActive, setpopupActive] = useState(false)
   const [newTodo, setNewtodo] = useState("")
+
+  const showToastMessage = () => {
+    toast.error('Write Some Task!!!!!', {
+        position: toast.POSITION.TOP_CENTER
+    });
+};
 
   useEffect(() => {
     getTodos()
@@ -48,6 +56,7 @@ function App() {
   }
 
   const addTodo = async() =>{
+    if(newTodo !== ""){
     const response =  await axios.post(`${api}/todo/new`, {
       text : newTodo
     }, {
@@ -59,6 +68,15 @@ function App() {
     setTodos([...todos,response.data])
     setpopupActive(false)
     setNewtodo("")
+  }
+  else
+  {
+     
+    setpopupActive(false)
+    setNewtodo("")
+    showToastMessage()
+    
+  }
   }
 
   return (
@@ -94,6 +112,7 @@ function App() {
           </div>
         </div>
       ) : ''}
+       <ToastContainer />
     </div>
   );
 }
